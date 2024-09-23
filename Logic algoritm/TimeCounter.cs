@@ -9,24 +9,23 @@ namespace Algoritms.Logic
 {
     public class TimeCounter
     {
-        public static TimeSpan[] TimeCount(int nMin, int nMax, Algoritm algoritm)
+        public static List<TimeSpan> TimeCount(int nMin, int nMax, Algoritm algoritm, int step = 1)
         {
             Stopwatch sw = new Stopwatch();
 
             Array array = Generator.Generate(nMax);
 
-            TimeSpan[] time = new TimeSpan[nMax-nMin+1];
+            List<TimeSpan> time = new List<TimeSpan>();
 
-            for (int i = nMin; i <= nMax; i = i+100)
+            for (int i = nMin; i <= nMax; i = i+step)
             {
                 int[] nArray = new int[i];
                 Array.Copy(array, nArray, i);
                 sw.Start();
                 algoritm.DoAlgoritm(nArray);
                 sw.Stop();
-                time[i-nMin] = sw.Elapsed;
+                time.Add(sw.Elapsed);
                 sw.Reset();
-        
             }
 
             return time;

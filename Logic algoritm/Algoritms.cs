@@ -9,16 +9,6 @@ namespace Algoritms.Logic
 {
     public abstract class Algoritm
     {
-        //public int n;
-        //public Array dataSet;
-
-        //public Algoritm (int dataQuantity, Array data)
-        //{
-        //    n = dataQuantity;
-        //    Array.Copy(data, dataSet, n-1);
-            
-        //}
-
         public abstract void DoAlgoritm(Array array);
     }
 
@@ -46,4 +36,40 @@ namespace Algoritms.Logic
         }
 
     }
+
+    public class Const : Algoritm
+    {
+        public override void DoAlgoritm(Array array)
+        {
+            int factorial = 1;
+
+            for (int i =0; i < 100000000; i++)
+            {
+                factorial = factorial * i;
+            }
+        }
+    }
+
+    public class MultiplyElements: Algoritm
+    {
+        public override void DoAlgoritm(Array array)
+        {
+            double multiplyValue = 1;
+            var a = array.GetType();
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                multiplyValue = Convert.ToDouble(array.GetValue(i)) * multiplyValue;
+            }
+        }
+    }
+
+    public class TimSort : Algoritm
+    {
+        public override void DoAlgoritm(Array array)
+        {
+            
+        }
+    }
+
 }
