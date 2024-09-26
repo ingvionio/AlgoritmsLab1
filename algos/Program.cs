@@ -6,8 +6,9 @@ namespace Algoritms.ConsloeApp
     {
         static void Main()
         {
-            MultiplyElements algoritm = new MultiplyElements();
-            List<TimeSpan> time = TimeCounter.TimeCount(2, 1000005, algoritm, 1000);
+            TimSort algoritm = new TimSort();
+            BubbleSort bubbleSort = new BubbleSort();
+            List<TimeSpan> time = TimeCounter.TimeCount(100000,100000, bubbleSort, 1);
 
             foreach (TimeSpan t in time)
             {
