@@ -32,44 +32,41 @@ namespace Algoritms.Logic
             QuickSort(array, 0, array.Length - 1);
         }
 
-        public static Array QuickSort(Array array, int minIndex, int maxIndex)
+        private static void QuickSort(Array array, int low, int high)
         {
-            if(minIndex >= maxIndex)
+            if (low < high)
             {
-                return array;
+                int partitionIndex = Partition(array, low, high);
+
+                QuickSort(array, low, partitionIndex - 1);
+                QuickSort(array, partitionIndex + 1, high);
             }
-
-            int pivotIndex = Partition(array, minIndex, maxIndex);
-            QuickSort(array, minIndex, pivotIndex - 1);
-            QuickSort(array, pivotIndex + 1, maxIndex);
-
-            return array;
         }
 
-        public static int Partition(Array array, int minIndex, int maxIndex)
+        private static int Partition(Array arr, int low, int high)
         {
-            int pivot = minIndex - 1;
+            IComparable pivot = (IComparable)arr.GetValue(high);
+            int i = (low - 1);
 
-            for(int i = minIndex; i< maxIndex; i++)
+            for (int j = low; j < high; j++)
             {
-                if (Convert.ToInt64(array.GetValue(i)) < Convert.ToInt64(array.GetValue(maxIndex)))
+                if (((IComparable)arr.GetValue(j)).CompareTo(pivot) < 0)
                 {
-                    pivot++;
+                    i++;
 
-                    Swap(array, pivot, i);
+                    Swap(arr, i, j);
                 }
             }
 
-            pivot++;
-            Swap(array, pivot, maxIndex);
-            return pivot;
+            Swap(arr, i + 1, high);
+            return (i + 1);
         }
 
-        private static void Swap(Array array, int pivot, int i)
+        private static void Swap(Array arr, int i, int j)
         {
-            long temp = Convert.ToInt64(array.GetValue(i));
-            array.SetValue(array.GetValue(pivot), i);
-            array.SetValue(temp, pivot);
+            object temp = arr.GetValue(i);
+            arr.SetValue(arr.GetValue(j), i);
+            arr.SetValue(temp, j);
         }
     }
 
