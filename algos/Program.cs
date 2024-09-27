@@ -8,13 +8,28 @@ namespace Algoritms.ConsloeApp
         {
             TimSort algoritm = new TimSort();
             BubbleSort bubbleSort = new BubbleSort();
-            List<TimeSpan> time = TimeCounter.TimeCount(100000,100000, bubbleSort, 1);
+            QuickSortAlgoritm quickSortAlgoritm = new QuickSortAlgoritm();
+            NaiveAssessment naiveAssessment = new NaiveAssessment();
+            HornerMethod hornerMethod = new HornerMethod();
+            PowAlgorithm powAlgorithm = new PowAlgorithm();
+            RecPow recPow = new RecPow();
+            QuickPow quickPow = new QuickPow();
+            //List<TimeSpan> time = TimeCounter.TimeCount(1000,100000, hornerMethod, 10); 
 
-            foreach (TimeSpan t in time)
+            /*foreach (TimeSpan t in time) 
+            { 
+                Console.WriteLine(t.TotalSeconds.ToString()); 
+            } */
+
+            int[] test = Generator.GeneratePowers(20);
+            quickPow.DoAlgoritm(test);
+
+
+            /*foreach (var el in test)
             {
-                Console.WriteLine(t.TotalSeconds.ToString());
-            }
-            
+                Console.WriteLine(el.ToString());
+            }*/
+
         }
     }
 }

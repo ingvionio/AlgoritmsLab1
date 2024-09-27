@@ -33,7 +33,7 @@ namespace Algoritms.Logic
 
             for (int i = minIndex; i < maxIndex; i++)
             {
-                if (Convert.ToInt64(array.GetValue(i)) < Convert.ToInt64(array.GetValue(maxIndex)))
+                if (Convert.ToInt32(array.GetValue(i)) < Convert.ToInt32(array.GetValue(maxIndex)))
                 {
                     pivot++;
 
@@ -48,7 +48,7 @@ namespace Algoritms.Logic
 
         private static void Swap(Array array, int pivot, int i)
         {
-            long temp = Convert.ToInt64(array.GetValue(i));
+            int temp = Convert.ToInt32(array.GetValue(i));
             array.SetValue(array.GetValue(pivot), i);
             array.SetValue(temp, pivot);
         }

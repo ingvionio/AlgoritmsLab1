@@ -19,5 +19,16 @@ namespace Algoritms.Logic
             }
             return array;
         }
+        public static int[] GeneratePowers(int nMax)
+        {
+            int[] array = new int[nMax];
+
+            for(int i = 1;i < nMax; i++)
+            {
+                array[i] = i;
+            }
+
+            return array;
+        }
     }
 }
