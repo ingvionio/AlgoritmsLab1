@@ -14,6 +14,7 @@ namespace Algoritms.ConsloeApp
             PowAlgorithm powAlgorithm = new PowAlgorithm();
             RecPow recPow = new RecPow();
             QuickPow quickPow = new QuickPow();
+            HeapSort heapSort = new HeapSort();
             //List<TimeSpan> time = TimeCounter.TimeCount(1000,100000, hornerMethod, 10); 
 
             /*foreach (TimeSpan t in time) 
@@ -21,14 +22,14 @@ namespace Algoritms.ConsloeApp
                 Console.WriteLine(t.TotalSeconds.ToString()); 
             } */
 
-            int[] test = Generator.GeneratePowers(20);
-            quickPow.DoAlgoritm(test);
+            int[] test = Generator.Generate(20);
+            heapSort.DoAlgoritm(test);
 
 
-            /*foreach (var el in test)
+            foreach (var el in test)
             {
                 Console.WriteLine(el.ToString());
-            }*/
+            }
 
         }
     }
