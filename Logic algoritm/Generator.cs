@@ -30,5 +30,19 @@ namespace Algoritms.Logic
 
             return array;
         }
+        public static int[ , ] GenerateMatrix(int size, int nMin = 100, int nMax = 1000)
+        {
+            int[ , ] matrix = new int[size, size];
+            Random random = new Random();
+
+            for(int i = 0; i < size; i++)
+            {
+                for(int j = 0; j < size; j++)
+                {
+                    matrix[i, j] = random.Next(nMin, nMax);
+                }
+            }
+            return matrix;
+        }
     }
 }
