@@ -15,6 +15,7 @@ namespace Algoritms.ConsloeApp
             RecPow recPow = new RecPow();
             QuickPow quickPow = new QuickPow();
             HeapSort heapSort = new HeapSort();
+            MatrixMultiplyer matrixMultiplyer = new MatrixMultiplyer();
             //List<TimeSpan> time = TimeCounter.TimeCount(1000,100000, hornerMethod, 10); 
 
             /*foreach (TimeSpan t in time) 
@@ -22,14 +23,15 @@ namespace Algoritms.ConsloeApp
                 Console.WriteLine(t.TotalSeconds.ToString()); 
             } */
 
-            int[] test = Generator.Generate(20);
-            heapSort.DoAlgoritm(test);
+            int[,] firstMatrix = Generator.GenerateMatrix(4, 10, 15);
+            int[,] secondMatrix = Generator.GenerateMatrix(4, 10, 15);
+            MatrixMultiplyer.DoAlgoritm(firstMatrix, secondMatrix);
 
 
-            foreach (var el in test)
+            /*foreach (var el in test)
             {
                 Console.WriteLine(el.ToString());
-            }
+            }*/
 
         }
     }
