@@ -38,7 +38,6 @@ namespace Algoritms.Logic
                     result *= num;
                 }
             }
-            Console.WriteLine(result);
         }
     }
 }
