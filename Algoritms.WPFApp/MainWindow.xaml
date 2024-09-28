@@ -11,9 +11,18 @@
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5">
             <Label Content="Алгоритм:"/>
-            <ComboBox x:Name="AlgorithmSelector" Width="150" Margin="5">
+            <ComboBox x:Name="AlgorithmSelector" Width="150">
                 <ComboBoxItem Content="Bubble Sort"/>
+                <ComboBoxItem Content="Heap Sort"/>
+                <ComboBoxItem Content="Horner Method"/>
+                <ComboBoxItem Content="Gnome Sort"/>
+                <ComboBoxItem Content="Multiply Elements"/>
+                <ComboBoxItem Content="Naive Assessment"/>
+                <ComboBoxItem Content="PowAlgorithm"/>
+                <ComboBoxItem Content="QuickPow"/>
                 <ComboBoxItem Content="Quick Sort"/>
+                <ComboBoxItem Content="RecPow"/>
+                <ComboBoxItem Content="Sum"/>
                 <ComboBoxItem Content="Tim Sort"/>
             </ComboBox>
 
@@ -21,7 +30,7 @@
             <TextBox x:Name="MinElementsBox" Width="50" Margin="5" Text="100"/>
 
             <Label Content="Max:"/>
-            <TextBox x:Name="MaxElementsBox" Width="50" Margin="5" Text="10000"/>
+            <TextBox x:Name="MaxElementsBox" Width="50" Margin="5" Text="10000" />
 
             <Label Content="Step:"/>
             <TextBox x:Name="StepSizeBox" Width="50" Margin="5" Text="100"/>

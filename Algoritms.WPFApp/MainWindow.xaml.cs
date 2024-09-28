@@ -45,7 +45,7 @@ namespace Algoritms.WPFApp
             try
             {
                 List<TimeSpan> times = await Task.Run(() =>
-                    TimeCounter.TimeCount(nMin, nMax, algorithm, step, _cancellationTokenSource.Token)
+                    TimeCounter.TimeCount(nMin, nMax, algorithm, step, _cancellationTokenSource.Token, repetitions: 5)
                 );
 
                 Dispatcher.Invoke(() => UpdatePlot(times, nMin, step, algorithm.GetType().Name));
@@ -69,10 +69,37 @@ namespace Algoritms.WPFApp
         private void UpdatePlot(List<TimeSpan> times, int nMin, int step, string algorithmName)
         {
             PlotModel model = new PlotModel { Title = $"Алгоритм на графике: {algorithmName}" };
-            model.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "Количество элементов" });
-            model.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "Время (мс)" });
 
-            LineSeries series = new LineSeries { Title = algorithmName, MarkerType = MarkerType.Circle };
+            model.Axes.Add(new LinearAxis
+            {
+                Position = AxisPosition.Bottom,
+                Title = "Количество элементов",
+                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.Dot,
+                TicklineColor = OxyColors.Black,
+                AxislineColor = OxyColors.Black
+            });
+
+            model.Axes.Add(new LinearAxis
+            {
+                Position = AxisPosition.Left,
+                Title = "Время (мс)",
+                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.Dot,
+                TicklineColor = OxyColors.Black,
+                AxislineColor = OxyColors.Black
+            });
+
+            LineSeries series = new LineSeries
+            {
+                Title = algorithmName,
+                MarkerType = MarkerType.Circle,
+                MarkerSize = 4,
+                MarkerFill = OxyColors.Red,
+                Color = OxyColors.IndianRed,
+                StrokeThickness = 2
+            };
+
             for (int i = 0; i < times.Count; i++)
             {
                 series.Points.Add(new DataPoint(nMin + i * step, times[i].TotalMilliseconds));
@@ -87,8 +114,17 @@ namespace Algoritms.WPFApp
             return AlgorithmSelector.SelectedIndex switch
             {
                 0 => new BubbleSort(),
-                1 => new QuickSortAlgoritm(),
-                2 => new TimSort(),
+                1 => new HeapSort(),
+                2 => new HornerMethod(),
+                3 => new GnomeSort(),
+                4 => new MultiplyElements(),
+                5 => new NaiveAssessment(),
+                6 => new PowAlgorithm(),
+                7 => new QuickPow(),
+                8 => new QuickSortAlgoritm(),
+                9 => new RecPow(),
+                10 => new Sum(),
+                11 => new TimSort(),
                 _ => null
             };
         }
