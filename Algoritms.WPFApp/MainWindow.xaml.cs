@@ -32,6 +32,13 @@ namespace Algoritms.WPFApp
                 return;
             }
 
+            // Проверка repetitions
+            if (!int.TryParse(RepetitionsBox.Text, out int repetitions) || repetitions <= 0)
+            {
+                MessageBox.Show("Некорректное значение для Repetitions.");
+                return;
+            }
+
             Algoritm algorithm = GetSelectedAlgorithm();
             if (algorithm == null)
             {
@@ -46,7 +53,7 @@ namespace Algoritms.WPFApp
             try
             {
                 List<TimeSpan> times = await Task.Run(() =>
-                    TimeCounter.TimeCount(nMin, nMax, algorithm, step, _cancellationTokenSource.Token, repetitions: 5)
+                    TimeCounter.TimeCount(nMin, nMax, algorithm, step, _cancellationTokenSource.Token, repetitions) // Используем repetitions из TextBox
                 );
 
                 Dispatcher.Invoke(() => UpdatePlot(times, nMin, step, algorithm.GetType().Name));

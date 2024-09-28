@@ -26,14 +26,20 @@
                 <ComboBoxItem Content="Tim Sort"/>
             </ComboBox>
 
+           
             <Label Content="Min:"/>
-            <TextBox x:Name="MinElementsBox" Width="50" Margin="5" Text="100"/>
+            <TextBox x:Name="MinElementsBox" Width="50" Margin="5" Text="100" TextAlignment="Center"/>
 
             <Label Content="Max:"/>
-            <TextBox x:Name="MaxElementsBox" Width="50" Margin="5" Text="10000" />
+            <TextBox x:Name="MaxElementsBox" Width="50" Margin="5" Text="10000" TextAlignment="Center"/>
 
             <Label Content="Step:"/>
-            <TextBox x:Name="StepSizeBox" Width="50" Margin="5" Text="100"/>
+            <TextBox x:Name="StepSizeBox" Width="50" Margin="5" Text="100" TextAlignment="Center"/>
+            
+            <Label Content="Repetitions:"/>
+            <TextBox x:Name="RepetitionsBox" Width="50" Text="5" TextAlignment="Center" Height="20"/>
+
+
             <Button x:Name="CancelButton" Content="Отмена" Margin="5" Click="CancelButton_Click" IsEnabled="False" />
             <Button x:Name="RunButton" Content="Запустить" Margin="5" Click="RunButton_Click"/>
         </StackPanel>
