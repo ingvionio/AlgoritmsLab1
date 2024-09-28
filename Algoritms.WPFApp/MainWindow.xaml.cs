@@ -8,10 +8,11 @@ using Algoritms.Logic;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
+using MathNet.Numerics;
 
 namespace Algoritms.WPFApp
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : System.Windows.Window
     {
         private CancellationTokenSource _cancellationTokenSource;
 
@@ -90,22 +91,40 @@ namespace Algoritms.WPFApp
                 AxislineColor = OxyColors.Black
             });
 
+            // Создаем точки для графика алгоритма
             LineSeries series = new LineSeries
             {
                 Title = algorithmName,
                 MarkerType = MarkerType.Circle,
                 MarkerSize = 4,
-                MarkerFill = OxyColors.Red,
-                Color = OxyColors.IndianRed,
+                MarkerFill = OxyColors.Green,
+                Color = OxyColors.DarkGreen,
                 StrokeThickness = 2
             };
-
             for (int i = 0; i < times.Count; i++)
             {
                 series.Points.Add(new DataPoint(nMin + i * step, times[i].TotalMilliseconds));
             }
-            model.Series.Add(series);
 
+            // Данные для апроксимации
+            double[] xData = times.Select((t, i) => (double)(nMin + i * step)).ToArray();
+            double[] yData = times.Select(t => t.TotalMilliseconds).ToArray();
+
+            // Вычисляем коэффициенты полинома 3-й степени
+            double[] polynomialCoefficients = GetPolynomialApproximation(xData, yData, 3);
+
+            // Создаем FunctionSeries для апроксимации
+            FunctionSeries approximationSeries = new FunctionSeries(
+                x => polynomialCoefficients[0] + polynomialCoefficients[1] * x +
+                     polynomialCoefficients[2] * x * x + polynomialCoefficients[3] * x * x * x,
+                xData.Min(), xData.Max(), 0.1,
+                "Апроксимация"
+            );
+            approximationSeries.Color = OxyColors.Red;
+
+            // Добавляем графики на PlotModel
+            model.Series.Add(series);
+            model.Series.Add(approximationSeries);
             PlotView.Model = model;
         }
 
@@ -132,6 +151,12 @@ namespace Algoritms.WPFApp
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             _cancellationTokenSource?.Cancel();
+        }
+
+        // Метод для вычисления полиномиальной апроксимации
+        private double[] GetPolynomialApproximation(double[] xData, double[] yData, int degree)
+        {
+            return Fit.Polynomial(xData, yData, degree);
         }
     }
 }
