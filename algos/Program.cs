@@ -16,6 +16,7 @@ namespace Algoritms.ConsloeApp
             QuickPow quickPow = new QuickPow();
             HeapSort heapSort = new HeapSort();
             MatrixMultiplyer matrixMultiplyer = new MatrixMultiplyer();
+            GnomeSort gnomeSort = new GnomeSort();
             //List<TimeSpan> time = TimeCounter.TimeCount(1000,100000, hornerMethod, 10); 
 
             //foreach (TimeSpan t in time) 
