@@ -231,24 +231,28 @@ namespace Algoritms.Logic
 
                 if (((IComparable)arr.GetValue(i)).CompareTo(arr.GetValue(i+1)) <= 0)
                 {
-                    while (i<n-1 && (runLength < minRun || ((IComparable)arr.GetValue(i)).CompareTo(arr.GetValue(i + 1)) <= 0))
+                    while (i < n - 1 && ((IComparable)arr.GetValue(i)).CompareTo(arr.GetValue(i + 1)) <= 0)
                     {
                         runLength++;
                         i++;
                     }
 
-                    InsertionSort(arr, runStartIndex, runStartIndex + runLength);
-                    StackPush(arr, stack, runStartIndex, runLength);
+                    // Если runLength меньше minRun, то продолжаем, но без второго цикла
+                    if (runStartIndex + minRun < n-1)
+                        runLength = Math.Max(minRun, runLength);
+
                 }
 
                 else
                 {
-                    while (i < n - 1&& (runLength < minRun || ((IComparable)arr.GetValue(i)).CompareTo(arr.GetValue(i + 1)) > 0))
+                    while (i < n - 1&& (((IComparable)arr.GetValue(i)).CompareTo(arr.GetValue(i + 1)) > 0))
                     {
                         runLength++;
                         i++;
                     }
                     Array.Reverse(arr, runStartIndex, runLength);
+                    if (runStartIndex + minRun < n - 1)
+                        runLength = Math.Max(minRun, runLength);
 
                     InsertionSort(arr, runStartIndex, runStartIndex + runLength);
                     StackPush(arr, stack, runStartIndex, runLength);

@@ -18,20 +18,21 @@ namespace Algoritms.ConsloeApp
             MatrixMultiplyer matrixMultiplyer = new MatrixMultiplyer();
             //List<TimeSpan> time = TimeCounter.TimeCount(1000,100000, hornerMethod, 10); 
 
-            /*foreach (TimeSpan t in time) 
-            { 
-                Console.WriteLine(t.TotalSeconds.ToString()); 
-            } */
+            //foreach (TimeSpan t in time) 
+            //{ 
+            //    Console.WriteLine(t.TotalSeconds.ToString()); 
+            //}
 
-            int[,] firstMatrix = Generator.GenerateMatrix(4, 10, 15);
-            int[,] secondMatrix = Generator.GenerateMatrix(4, 10, 15);
-            MatrixMultiplyer.DoAlgoritm(firstMatrix, secondMatrix);
+            //int[,] firstMatrix = Generator.GenerateMatrix(4, 10, 15);
+            //int[,] secondMatrix = Generator.GenerateMatrix(4, 10, 15);
+            //MatrixMultiplyer.DoAlgoritm(firstMatrix, secondMatrix);
 
-
-            /*foreach (var el in test)
+            var test = Generator.Generate(100000, 1,10000000);
+            quickSortAlgoritm.DoAlgoritm(test);
+            foreach (var el in test)
             {
                 Console.WriteLine(el.ToString());
-            }*/
+            }
 
         }
     }
