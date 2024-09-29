@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace Algoritms.Logic
 {
-    public class MatrixMultiplyer
+    public class MatrixMultiplyer:Algoritm
     {
+        public override void DoAlgoritm(Array array)
+        {
+            throw new NotImplementedException();
+        }
+
         public static void DoAlgoritm(int[,] firstMatrix, int[,] secondMatrix)
         {
             int[,] result = new int[firstMatrix.GetLength(0), secondMatrix.GetLength(0)];
