@@ -228,6 +228,7 @@ namespace Algoritms.WPFApp
                 "Sum" => new Sum(),
                 "Tim Sort" => new TimSort(),
                 "Bingo Sort" => new BingoSort(),
+                "Const" => new Const(),
                 _ => null
             };
         }

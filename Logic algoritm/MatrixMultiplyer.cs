@@ -29,7 +29,7 @@ namespace Algoritms.Logic
             }
         }
         //Для теста
-        public static void Print(int[,] a)
+        /*public static void Print(int[,] a)
         {
             for (int i = 0; i < a.GetLength(0); i++)
             {
@@ -39,6 +39,6 @@ namespace Algoritms.Logic
                 }
                 Console.WriteLine();
             }
-        }
+        }*/
     }
 }
