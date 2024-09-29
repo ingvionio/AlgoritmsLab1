@@ -9,6 +9,8 @@ using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using MathNet.Numerics;
+using System.Windows.Controls;
+using OxyPlot.Legends;
 
 namespace Algoritms.WPFApp
 {
@@ -26,23 +28,17 @@ namespace Algoritms.WPFApp
             if (!int.TryParse(MinElementsBox.Text, out int nMin) ||
                 !int.TryParse(MaxElementsBox.Text, out int nMax) ||
                 !int.TryParse(StepSizeBox.Text, out int step) ||
-                nMin <= 0 || nMax <= 0 || step <= 0 || nMin > nMax)
+                !int.TryParse(RepetitionsBox.Text, out int repetitions) ||
+                nMin <= 0 || nMax <= 0 || step <= 0 || nMin > nMax || repetitions <= 0)
             {
                 MessageBox.Show("Некорректные значения параметров.");
                 return;
             }
 
-            // Проверка repetitions
-            if (!int.TryParse(RepetitionsBox.Text, out int repetitions) || repetitions <= 0)
+            var selectedAlgorithms = AlgorithmsListBox.SelectedItems.Cast<ListBoxItem>().Select(item => item.Content.ToString()).ToList();
+            if (selectedAlgorithms.Count == 0)
             {
-                MessageBox.Show("Некорректное значение для Repetitions.");
-                return;
-            }
-
-            Algoritm algorithm = GetSelectedAlgorithm();
-            if (algorithm == null)
-            {
-                MessageBox.Show("Выберите алгоритм.");
+                MessageBox.Show("Выберите хотя бы один алгоритм.");
                 return;
             }
 
@@ -50,13 +46,56 @@ namespace Algoritms.WPFApp
             RunButton.IsEnabled = false;
             CancelButton.IsEnabled = true;
 
+            SortingProgressBar.Value = 0;
+
             try
             {
-                List<TimeSpan> times = await Task.Run(() =>
-                    TimeCounter.TimeCount(nMin, nMax, algorithm, step, _cancellationTokenSource.Token, repetitions) // Используем repetitions из TextBox
-                );
+                PlotModel model = new PlotModel { Title = "Сравнение алгоритмов"};
+                model.Axes.Add(new LinearAxis
+                {
+                    Position = AxisPosition.Bottom,
+                    Title = "Количество элементов",
+                    MajorGridlineStyle = LineStyle.Solid,
+                    MinorGridlineStyle = LineStyle.Dot,
+                    TicklineColor = OxyColors.Black,
+                    AxislineColor = OxyColors.Black
+                });
+                model.Axes.Add(new LinearAxis
+                {
+                    Position = AxisPosition.Left,
+                    Title = "Время (мс)",
+                    MajorGridlineStyle = LineStyle.Solid,
+                    MinorGridlineStyle = LineStyle.Dot,
+                    TicklineColor = OxyColors.Black,
+                    AxislineColor = OxyColors.Black
+                });
 
-                Dispatcher.Invoke(() => UpdatePlot(times, nMin, step, algorithm.GetType().Name));
+                int totalSteps = selectedAlgorithms.Count * ((nMax - nMin) / step + 1) * repetitions;
+                int currentStep = 0;
+
+                foreach (var algorithmName in selectedAlgorithms)
+                {
+                    Algoritm algorithm = GetSelectedAlgorithm(algorithmName);
+
+                    List<TimeSpan> times = await Task.Run(() =>
+                    {
+                        var result = TimeCounter.TimeCount(nMin, nMax, algorithm, step, _cancellationTokenSource.Token, repetitions);
+
+                        currentStep += ((nMax - nMin) / step + 1) * repetitions;
+                        Dispatcher.Invoke(() =>
+                        {
+                            SortingProgressBar.Value = (double)currentStep / totalSteps * 100;
+                        });
+                        return result;
+                    });
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        AddSeriesToPlot(model, times, nMin, step, algorithmName);
+                    });
+                }
+
+                PlotView.Model = model;
             }
             catch (OperationCanceledException)
             {
@@ -71,43 +110,81 @@ namespace Algoritms.WPFApp
                 RunButton.IsEnabled = true;
                 CancelButton.IsEnabled = false;
                 _cancellationTokenSource.Dispose();
+
+                SortingProgressBar.Value = 0;
             }
         }
 
-        private void UpdatePlot(List<TimeSpan> times, int nMin, int step, string algorithmName)
+        private void AddSeriesToPlot(PlotModel model, List<TimeSpan> times, int nMin, int step, string algorithmName)
         {
-            PlotModel model = new PlotModel { Title = $"Алгоритм на графике: {algorithmName}" };
-
-            model.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Bottom,
-                Title = "Количество элементов",
-                MajorGridlineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.Dot,
-                TicklineColor = OxyColors.Black,
-                AxislineColor = OxyColors.Black
-            });
-
-            model.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Left,
-                Title = "Время (мс)",
-                MajorGridlineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.Dot,
-                TicklineColor = OxyColors.Black,
-                AxislineColor = OxyColors.Black
-            });
-
-            // Создаем точки для графика алгоритма
             LineSeries series = new LineSeries
             {
                 Title = algorithmName,
                 MarkerType = MarkerType.Circle,
                 MarkerSize = 4,
-                MarkerFill = OxyColors.Green,
-                Color = OxyColors.DarkGreen,
                 StrokeThickness = 2
             };
+
+            switch (algorithmName)
+            {
+                case "Bubble Sort":
+                    series.Color = OxyColors.Green;
+                    series.MarkerFill = OxyColors.DarkGreen;
+                    break;
+                case "Quick Sort":
+                    series.Color = OxyColors.Red;
+                    series.MarkerFill = OxyColors.DarkRed;
+                    break;
+                case "Tim Sort":
+                    series.Color = OxyColors.Blue;
+                    series.MarkerFill = OxyColors.DarkBlue;
+                    break;
+                case "Heap Sort":
+                    series.Color = OxyColors.Yellow;
+                    series.MarkerFill = OxyColors.DarkGoldenrod;
+                    break;
+                case "Gnome Sort":
+                    series.Color = OxyColors.Purple;
+                    series.MarkerFill = OxyColors.DarkViolet;
+                    break;
+                case "Bingo Sort":
+                    series.Color = OxyColors.Orange;
+                    series.MarkerFill = OxyColors.DarkOrange;
+                    break;
+                case "Horner Method":
+                    series.Color = OxyColors.Brown;
+                    series.MarkerFill = OxyColors.SaddleBrown;
+                    break;
+                case "Multiply Elements":
+                    series.Color = OxyColors.Cyan;
+                    series.MarkerFill = OxyColors.DarkCyan;
+                    break;
+                case "Naive Assessment":
+                    series.Color = OxyColors.Magenta;
+                    series.MarkerFill = OxyColors.DarkMagenta;
+                    break;
+                case "PowAlgorithm":
+                    series.Color = OxyColors.Lime;
+                    series.MarkerFill = OxyColors.DarkOliveGreen;
+                    break;
+                case "QuickPow":
+                    series.Color = OxyColors.Pink;
+                    series.MarkerFill = OxyColors.DeepPink;
+                    break;
+                case "RecPow":
+                    series.Color = OxyColors.Teal;
+                    series.MarkerFill = OxyColors.DarkSlateGray;
+                    break;
+                case "Sum":
+                    series.Color = OxyColors.Gold;
+                    series.MarkerFill = OxyColors.Goldenrod;
+                    break;
+                default:
+                    series.Color = OxyColors.Black;
+                    series.MarkerFill = OxyColors.Gray;
+                    break;
+            }
+
             for (int i = 0; i < times.Count; i++)
             {
                 series.Points.Add(new DataPoint(nMin + i * step, times[i].TotalMilliseconds));
@@ -125,32 +202,32 @@ namespace Algoritms.WPFApp
                 x => polynomialCoefficients[0] + polynomialCoefficients[1] * x +
                      polynomialCoefficients[2] * x * x + polynomialCoefficients[3] * x * x * x,
                 xData.Min(), xData.Max(), 0.1,
-                "Апроксимация"
+                $"{algorithmName} (Апроксимация)"
             );
-            approximationSeries.Color = OxyColors.Red;
+            approximationSeries.Color = OxyColors.OrangeRed;
 
             // Добавляем графики на PlotModel
             model.Series.Add(series);
             model.Series.Add(approximationSeries);
-            PlotView.Model = model;
         }
 
-        private Algoritm GetSelectedAlgorithm()
+        private Algoritm GetSelectedAlgorithm(string algorithmName)
         {
-            return AlgorithmSelector.SelectedIndex switch
+            return algorithmName switch
             {
-                0 => new BubbleSort(),
-                1 => new HeapSort(),
-                2 => new HornerMethod(),
-                3 => new GnomeSort(),
-                4 => new MultiplyElements(),
-                5 => new NaiveAssessment(),
-                6 => new PowAlgorithm(),
-                7 => new QuickPow(),
-                8 => new QuickSortAlgoritm(),
-                9 => new RecPow(),
-                10 => new Sum(),
-                11 => new TimSort(),
+                "Bubble Sort" => new BubbleSort(),
+                "Heap Sort" => new HeapSort(),
+                "Horner Method" => new HornerMethod(),
+                "Gnome Sort" => new GnomeSort(),
+                "Multiply Elements" => new MultiplyElements(),
+                "Naive Assessment" => new NaiveAssessment(),
+                "PowAlgorithm" => new PowAlgorithm(),
+                "QuickPow" => new QuickPow(),
+                "Quick Sort" => new QuickSortAlgoritm(),
+                "RecPow" => new RecPow(),
+                "Sum" => new Sum(),
+                "Tim Sort" => new TimSort(),
+                "Bingo Sort" => new BingoSort(),
                 _ => null
             };
         }
@@ -164,6 +241,11 @@ namespace Algoritms.WPFApp
         private double[] GetPolynomialApproximation(double[] xData, double[] yData, int degree)
         {
             return Fit.Polynomial(xData, yData, degree);
+        }
+
+        private void OpenAlgorithmsButton_Click(object sender, RoutedEventArgs e)
+        {
+            AlgorithmsPopup.IsOpen = true;
         }
     }
 }

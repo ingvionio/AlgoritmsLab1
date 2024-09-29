@@ -2,48 +2,55 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:oxy="http://oxyplot.org/wpf"
-        Title="Визуализация алгоритмов" Height="450" Width="800">
+        Title="Визуализация алгоритмов" 
+        Height="480" Width="800"
+        MinHeight="480" MinWidth="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5">
-            <Label Content="Алгоритм:"/>
-            <ComboBox x:Name="AlgorithmSelector" Width="150">
-                <ComboBoxItem Content="Bubble Sort"/>
-                <ComboBoxItem Content="Heap Sort"/>
-                <ComboBoxItem Content="Horner Method"/>
-                <ComboBoxItem Content="Gnome Sort"/>
-                <ComboBoxItem Content="Multiply Elements"/>
-                <ComboBoxItem Content="Naive Assessment"/>
-                <ComboBoxItem Content="PowAlgorithm"/>
-                <ComboBoxItem Content="QuickPow"/>
-                <ComboBoxItem Content="Quick Sort"/>
-                <ComboBoxItem Content="RecPow"/>
-                <ComboBoxItem Content="Sum"/>
-                <ComboBoxItem Content="Tim Sort"/>
-            </ComboBox>
+        <DockPanel Grid.Row="0" Margin="5">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                <Button x:Name="OpenAlgorithmsButton" Content="Выбрать алгоритмы" Click="OpenAlgorithmsButton_Click"/>
+                <Popup x:Name="AlgorithmsPopup" PlacementTarget="{Binding ElementName=OpenAlgorithmsButton}" 
+                       StaysOpen="False" Width="150">
+                    <ListBox x:Name="AlgorithmsListBox" SelectionMode="Multiple">
+                        <ListBoxItem Content="Bubble Sort"/>
+                        <ListBoxItem Content="Heap Sort"/>
+                        <ListBoxItem Content="Horner Method"/>
+                        <ListBoxItem Content="Gnome Sort"/>
+                        <ListBoxItem Content="Multiply Elements"/>
+                        <ListBoxItem Content="Naive Assessment"/>
+                        <ListBoxItem Content="PowAlgorithm"/>
+                        <ListBoxItem Content="QuickPow"/>
+                        <ListBoxItem Content="Quick Sort"/>
+                        <ListBoxItem Content="RecPow"/>
+                        <ListBoxItem Content="Sum"/>
+                        <ListBoxItem Content="Tim Sort"/>
+                        <ListBoxItem Content="BingoSort"/>
+                    </ListBox>
+                </Popup>
+            </StackPanel>
 
-           
-            <Label Content="Min:"/>
-            <TextBox x:Name="MinElementsBox" Width="50" Margin="5" Text="100" TextAlignment="Center"/>
-
-            <Label Content="Max:"/>
-            <TextBox x:Name="MaxElementsBox" Width="50" Margin="5" Text="10000" TextAlignment="Center"/>
-
-            <Label Content="Step:"/>
-            <TextBox x:Name="StepSizeBox" Width="50" Margin="5" Text="100" TextAlignment="Center"/>
-            
-            <Label Content="Repetitions:"/>
-            <TextBox x:Name="RepetitionsBox" Width="50" Text="5" TextAlignment="Center" Height="20"/>
-
-
-            <Button x:Name="CancelButton" Content="Отмена" Margin="5" Click="CancelButton_Click" IsEnabled="False" />
-            <Button x:Name="RunButton" Content="Запустить" Margin="5" Click="RunButton_Click"/>
-        </StackPanel>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                <Label Content="Min:"/>
+                <TextBox x:Name="MinElementsBox" Width="50" Margin="5" Text="100" TextAlignment="Center"/>
+                <Label Content="Max:"/>
+                <TextBox x:Name="MaxElementsBox" Width="50" Margin="5" Text="10000" TextAlignment="Center"/>
+                <Label Content="Step:"/>
+                <TextBox x:Name="StepSizeBox" Width="50" Margin="5" Text="100" TextAlignment="Center"/>
+                <Label Content="Repetitions:"/>
+                <TextBox x:Name="RepetitionsBox" Width="50" Text="5" TextAlignment="Center" Height="20"/>
+                <Button x:Name="CancelButton" Content="Отмена" Margin="5" Click="CancelButton_Click" IsEnabled="False" />
+                <Button x:Name="RunButton" Content="Запустить" Margin="5" Click="RunButton_Click"/>
+            </StackPanel>
+        </DockPanel>
 
         <oxy:PlotView x:Name="PlotView" Grid.Row="1" Margin="5"/>
+
+        <ProgressBar x:Name="SortingProgressBar" Grid.Row="2" Height="20" Margin="5" Minimum="0" Maximum="100" Value="0" />
     </Grid>
 </Window>
