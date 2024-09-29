@@ -13,7 +13,7 @@ namespace Algoritms.Logic
             throw new NotImplementedException();
         }
 
-        public static void DoAlgoritm(int[,] firstMatrix, int[,] secondMatrix)
+        public void DoAlgoritm(int[,] firstMatrix, int[,] secondMatrix)
         {
             int[,] result = new int[firstMatrix.GetLength(0), secondMatrix.GetLength(0)];
             
