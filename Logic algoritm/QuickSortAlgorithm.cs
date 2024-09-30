@@ -20,14 +20,14 @@ namespace Algoritms.Logic
                 return array;
             }
 
-            int pivotIndex = Partition(array, minIndex, maxIndex);
+            int pivotIndex = Separation(array, minIndex, maxIndex);
             QuickSort(array, minIndex, pivotIndex - 1);
             QuickSort(array, pivotIndex + 1, maxIndex);
 
             return array;
         }
 
-        public static int Partition(Array array, int minIndex, int maxIndex)
+        public static int Separation(Array array, int minIndex, int maxIndex)
         {
             int pivot = minIndex - 1;
 
