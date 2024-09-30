@@ -79,7 +79,17 @@ namespace Algoritms.WPFApp
 
                     List<TimeSpan> times = await Task.Run(() =>
                     {
-                        var result = TimeCounter.TimeCount(nMin, nMax, algorithm, step, _cancellationTokenSource.Token, repetitions);
+                        List<TimeSpan> result;
+                        if (algorithm is MatrixMultiplyer)
+                        {
+                            result = TimeCounter.TimeCount(nMin, nMax, (MatrixMultiplyer)algorithm, step, _cancellationTokenSource.Token, repetitions);
+                        }
+
+                        else 
+                        {
+                            result = TimeCounter.TimeCount(nMin, nMax, algorithm, step, _cancellationTokenSource.Token, repetitions);
+                        }
+
 
                         currentStep += ((nMax - nMin) / step + 1) * repetitions;
                         Dispatcher.Invoke(() =>
@@ -179,6 +189,10 @@ namespace Algoritms.WPFApp
                     series.Color = OxyColors.Gold;
                     series.MarkerFill = OxyColors.Goldenrod;
                     break;
+                case "MtrixMultiply":
+                    series.Color = OxyColors.Gold;
+                    series.MarkerFill = OxyColors.Goldenrod;
+                    break;
                 default:
                     series.Color = OxyColors.Black;
                     series.MarkerFill = OxyColors.Gray;
@@ -229,6 +243,7 @@ namespace Algoritms.WPFApp
                 "Tim Sort" => new TimSort(),
                 "BingoSort" => new BingoSort(),
                 "Const" => new Const(),
+                "MatrixMultiply" => new MatrixMultiplyer(),
                 _ => null
             };
         }

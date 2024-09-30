@@ -32,6 +32,7 @@
                         <ListBoxItem Content="Tim Sort"/>
                         <ListBoxItem Content="BingoSort"/>
                         <ListBoxItem Content="Const"/>
+                        <ListBoxItem Content="MatrixMultiply"/>
                     </ListBox>
                 </Popup>
             </StackPanel>

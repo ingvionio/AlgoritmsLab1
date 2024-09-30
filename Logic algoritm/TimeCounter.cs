@@ -35,7 +35,7 @@ namespace Algoritms.Logic
             return averageTimes;
         }
 
-        public static List<TimeSpan> TimeCount(int nMin, int nMax, MatrixMultiplyer algoritm, int step, CancellationToken cancellationToken, int repetitions = 5, int matrixSize = 100)
+        public static List<TimeSpan> TimeCount(int nMin, int nMax, MatrixMultiplyer algoritm, int step, CancellationToken cancellationToken, int repetitions = 5)
         {
             List<TimeSpan> averageTimes = new List<TimeSpan>();
 
@@ -50,8 +50,8 @@ namespace Algoritms.Logic
                 long totalTicks = 0;
                 for (int j = 0; j < repetitions; j++)
                 {
-                    int[,] firstMatrix = Generator.GenerateMatrix(matrixSize);
-                    int[,] secondMatrix = Generator.GenerateMatrix(matrixSize);
+                    int[,] firstMatrix = Generator.GenerateMatrix(i);
+                    int[,] secondMatrix = Generator.GenerateMatrix(i);
                     Stopwatch sw = Stopwatch.StartNew();
                     algoritm.DoAlgoritm(firstMatrix, secondMatrix);
                     sw.Stop();
