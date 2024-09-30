@@ -11,6 +11,7 @@ using OxyPlot.Series;
 using MathNet.Numerics;
 using System.Windows.Controls;
 using OxyPlot.Legends;
+using System.Diagnostics;
 
 namespace Algoritms.WPFApp
 {
@@ -39,6 +40,15 @@ namespace Algoritms.WPFApp
             if (selectedAlgorithms.Count == 0)
             {
                 MessageBox.Show("Выберите хотя бы один алгоритм.");
+                return;
+            }
+
+            // Проверка размера матрицы, если выбран Matrix Multiplyer
+            int matrixSize = 0;
+            if (selectedAlgorithms.Contains("Matrix Multiplyer") &&
+                (!int.TryParse(MatrixSizeBox.Text, out matrixSize) || matrixSize <= 0))
+            {
+                MessageBox.Show("Некорректное значение для размера матрицы.");
                 return;
             }
 
@@ -75,7 +85,28 @@ namespace Algoritms.WPFApp
 
                 foreach (var algorithmName in selectedAlgorithms)
                 {
+                    // Обработка MatrixMultiplyer 
+                    if (algorithmName == "Matrix Multiplyer")
+                    {
+                        List<TimeSpan> algorithmTimes = await Task.Run(() =>
+                        {
+                            var result = TimeMatrixMultiplication(matrixSize, nMin, nMax, step, repetitions, _cancellationTokenSource.Token);
+                            currentStep += ((nMax - nMin) / step + 1) * repetitions;
+                            Dispatcher.Invoke(() =>
+                            {
+                                SortingProgressBar.Value = (double)currentStep / totalSteps * 100;
+                            });
+                            return result;
+                        });
+                        Dispatcher.Invoke(() =>
+                        {
+                            AddSeriesToPlot(model, algorithmTimes, nMin, step, algorithmName);
+                        });
+                        continue;
+                    }
+
                     Algoritm algorithm = GetSelectedAlgorithm(algorithmName);
+                    if (algorithm == null) continue;
 
                     List<TimeSpan> times = await Task.Run(() =>
                     {
@@ -123,6 +154,36 @@ namespace Algoritms.WPFApp
 
                 SortingProgressBar.Value = 0;
             }
+        }
+
+        // Измененный метод для замера времени умножения матриц
+        private List<TimeSpan> TimeMatrixMultiplication(int matrixSize, int nMin, int nMax, int step, int repetitions, CancellationToken cancellationToken)
+        {
+            List<TimeSpan> averageTimes = new List<TimeSpan>();
+            MatrixMultiplyer matrixMultiplier = new MatrixMultiplyer();
+
+            // Используем nMin, nMax, step для размера матрицы
+            for (int i = nMin; i <= nMax; i += step)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    throw new OperationCanceledException();
+                }
+
+                long totalTicks = 0;
+                for (int j = 0; j < repetitions; j++)
+                {
+                    int[,] firstMatrix = Generator.GenerateMatrix(i, nMin, nMax); // Используем i для размера матрицы
+                    int[,] secondMatrix = Generator.GenerateMatrix(i, nMin, nMax);
+
+                    Stopwatch sw = Stopwatch.StartNew();
+                    matrixMultiplier.DoAlgoritm(firstMatrix, secondMatrix);
+                    sw.Stop();
+                    totalTicks += sw.ElapsedTicks;
+                }
+                averageTimes.Add(new TimeSpan(totalTicks / repetitions));
+            }
+            return averageTimes;
         }
 
         private void AddSeriesToPlot(PlotModel model, List<TimeSpan> times, int nMin, int step, string algorithmName)
@@ -241,7 +302,7 @@ namespace Algoritms.WPFApp
                 "RecPow" => new RecPow(),
                 "Sum" => new Sum(),
                 "Tim Sort" => new TimSort(),
-                "BingoSort" => new BingoSort(),
+                "Bingo Sort" => new BingoSort(),
                 "Const" => new Const(),
                 "MatrixMultiply" => new MatrixMultiplyer(),
                 _ => null
@@ -263,5 +324,6 @@ namespace Algoritms.WPFApp
         {
             AlgorithmsPopup.IsOpen = true;
         }
+
     }
 }
