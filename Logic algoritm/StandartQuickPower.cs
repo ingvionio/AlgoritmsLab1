@@ -34,11 +34,6 @@ namespace Algoritms.Logic
                     power--;
                 }
             }
-            Print(result);
-        }
-        public static void Print(long result)
-        {
-            Console.WriteLine(result);
         }
     }
 }
