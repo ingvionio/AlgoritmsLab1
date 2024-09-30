@@ -13,7 +13,7 @@ namespace Algoritms.ConsloeApp
             HornerMethod hornerMethod = new HornerMethod();
             PowAlgorithm powAlgorithm = new PowAlgorithm();
             RecPow recPow = new RecPow();
-            QuickPow quickPow = new QuickPow();
+            StandartQuickPow quickPow = new StandartQuickPow();
             HeapSort heapSort = new HeapSort();
             MatrixMultiplyer matrixMultiplyer = new MatrixMultiplyer();
             GnomeSort gnomeSort = new GnomeSort();
