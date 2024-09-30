@@ -53,6 +53,17 @@ namespace Algoritms.WPFApp
             try
             {
                 PlotModel model = new PlotModel { Title = "Сравнение алгоритмов" };
+
+                model.Legends.Add(new Legend
+                {
+                    LegendPosition = LegendPosition.TopRight, // Позиция легенды
+                    LegendPlacement = LegendPlacement.Outside, // Внешняя легенда
+                    LegendOrientation = LegendOrientation.Vertical,
+                    LegendBorderThickness = 1,
+                    LegendTitle = "Алгоритмы", // Заголовок легенды
+                    LegendTitleFontWeight = OxyPlot.FontWeights.Bold
+                });
+
                 model.Axes.Add(new LinearAxis
                 {
                     Position = AxisPosition.Bottom,
