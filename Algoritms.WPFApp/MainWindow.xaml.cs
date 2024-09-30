@@ -44,13 +44,13 @@ namespace Algoritms.WPFApp
             }
 
             // Проверка размера матрицы, если выбран Matrix Multiplyer
-            int matrixSize = 0;
-            if (selectedAlgorithms.Contains("Matrix Multiplyer") &&
-                (!int.TryParse(MatrixSizeBox.Text, out matrixSize) || matrixSize <= 0))
-            {
-                MessageBox.Show("Некорректное значение для размера матрицы.");
-                return;
-            }
+            //int matrixSize = 0;
+            //if (selectedAlgorithms.Contains("Matrix Multiplyer") &&
+            //    (!int.TryParse(MatrixSizeBox.Text, out matrixSize) || matrixSize <= 0))
+            //{
+            //    MessageBox.Show("Некорректное значение для размера матрицы.");
+            //    return;
+            //}
 
             _cancellationTokenSource = new CancellationTokenSource();
             RunButton.IsEnabled = false;
@@ -85,25 +85,25 @@ namespace Algoritms.WPFApp
 
                 foreach (var algorithmName in selectedAlgorithms)
                 {
-                    // Обработка MatrixMultiplyer 
-                    if (algorithmName == "Matrix Multiplyer")
-                    {
-                        List<TimeSpan> algorithmTimes = await Task.Run(() =>
-                        {
-                            var result = TimeMatrixMultiplication(matrixSize, nMin, nMax, step, repetitions, _cancellationTokenSource.Token);
-                            currentStep += ((nMax - nMin) / step + 1) * repetitions;
-                            Dispatcher.Invoke(() =>
-                            {
-                                SortingProgressBar.Value = (double)currentStep / totalSteps * 100;
-                            });
-                            return result;
-                        });
-                        Dispatcher.Invoke(() =>
-                        {
-                            AddSeriesToPlot(model, algorithmTimes, nMin, step, algorithmName);
-                        });
-                        continue;
-                    }
+                    //// Обработка MatrixMultiplyer 
+                    //if (algorithmName == "Matrix Multiplyer")
+                    //{
+                    //    List<TimeSpan> algorithmTimes = await Task.Run(() =>
+                    //    {
+                    //        var result = TimeMatrixMultiplication(matrixSize, nMin, nMax, step, repetitions, _cancellationTokenSource.Token);
+                    //        currentStep += ((nMax - nMin) / step + 1) * repetitions;
+                    //        Dispatcher.Invoke(() =>
+                    //        {
+                    //            SortingProgressBar.Value = (double)currentStep / totalSteps * 100;
+                    //        });
+                    //        return result;
+                    //    });
+                    //    Dispatcher.Invoke(() =>
+                    //    {
+                    //        AddSeriesToPlot(model, algorithmTimes, nMin, step, algorithmName);
+                    //    });
+                    //    continue;
+                    //}
 
                     Algoritm algorithm = GetSelectedAlgorithm(algorithmName);
                     if (algorithm == null) continue;
