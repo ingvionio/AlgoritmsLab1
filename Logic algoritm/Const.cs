@@ -12,7 +12,7 @@ namespace Algoritms.Logic
         {
             int factorial = 1;
 
-            for (int i = 0; i < 100000000; i++)
+            for (int i = 0; i < 100000; i++)
             {
                 factorial = factorial * i;
             }

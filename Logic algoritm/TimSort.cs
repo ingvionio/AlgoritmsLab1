@@ -237,10 +237,6 @@ namespace Algoritms.Logic
                         i++;
                     }
 
-                    // Если runLength меньше minRun, то продолжаем, но без второго цикла
-                    if (runStartIndex + minRun < n-1)
-                        runLength = Math.Max(minRun, runLength);
-
                 }
 
                 else
