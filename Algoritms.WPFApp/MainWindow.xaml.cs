@@ -58,7 +58,7 @@ namespace Algoritms.WPFApp
                 {
                     LegendPosition = LegendPosition.TopRight, // Позиция легенды
                     LegendPlacement = LegendPlacement.Outside, // Внешняя легенда
-                    LegendOrientation = LegendOrientation.Vertical,
+                    LegendOrientation = LegendOrientation.Horizontal,
                     LegendBorderThickness = 1,
                     LegendTitle = "Алгоритмы", // Заголовок легенды
                     LegendTitleFontWeight = OxyPlot.FontWeights.Bold
