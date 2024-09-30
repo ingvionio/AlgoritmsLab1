@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Algoritms.Logic
 {
-    public class StandartQuickPow : Algoritm
+    public class QuickPow : Algoritm
     {
         int num = 2;
         public override void DoAlgoritm(Array powers)

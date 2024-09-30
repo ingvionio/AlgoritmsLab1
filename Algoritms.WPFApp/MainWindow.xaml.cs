@@ -297,7 +297,7 @@ namespace Algoritms.WPFApp
                 "Multiply Elements" => new MultiplyElements(),
                 "Naive Assessment" => new NaiveAssessment(),
                 "PowAlgorithm" => new PowAlgorithm(),
-                "QuickPow" => new StandartQuickPow(),
+                "QuickPow" => new QuickPow(),
                 "Quick Sort" => new QuickSortAlgoritm(),
                 "RecPow" => new RecPow(),
                 "Sum" => new Sum(),
