@@ -202,7 +202,7 @@ namespace Algoritms.WPFApp
                     series.Color = OxyColors.Purple;
                     series.MarkerFill = OxyColors.DarkViolet;
                     break;
-                case "BingoSort":
+                case "Bingo Sort":
                     series.Color = OxyColors.Orange;
                     series.MarkerFill = OxyColors.DarkOrange;
                     break;
