@@ -202,7 +202,7 @@ namespace Algoritms.WPFApp
                     series.Color = OxyColors.Purple;
                     series.MarkerFill = OxyColors.DarkViolet;
                     break;
-                case "Bingo Sort":
+                case "BingoSort":
                     series.Color = OxyColors.Orange;
                     series.MarkerFill = OxyColors.DarkOrange;
                     break;
@@ -298,7 +298,7 @@ namespace Algoritms.WPFApp
                 "RecPow" => new RecPow(),
                 "Sum" => new Sum(),
                 "Tim Sort" => new TimSort(),
-                "Bingo Sort" => new BingoSort(),
+                "BingoSort" => new BingoSort(),
                 "Const" => new Const(),
                 "MatrixMultiply" => new MatrixMultiplyer(),
                 "StandartQuickPower" => new StandartQuickPower(),
