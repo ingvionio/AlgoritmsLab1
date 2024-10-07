@@ -37,8 +37,15 @@ namespace Algoritms.ConsloeApp
             {
                 Console.WriteLine(el.ToString());
             }*/
-            var test = Generator.Generate(10);
-            mul.DoAlgoritm(test);
+            //var test = Generator.Generate(10);
+            //mul.DoAlgoritm(test);
+
+            CancellationToken cancellationToken = new CancellationToken();
+            List<long> steps = TimeCounter.StepCount(10, 100, standartQuickPower, 1, cancellationToken, 5);
+            foreach(long s  in steps)
+            {
+                Console.WriteLine(s);
+            }
         }
     }
 }

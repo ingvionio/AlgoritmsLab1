@@ -50,7 +50,7 @@ namespace Algoritms.Logic
                 long totalSteps = 0;
                 for (int j = 0; j < repetitions; j++)
                 {
-                    int[] nArray = Generator.Generate(i);
+                    int[] nArray = Generator.GeneratePowers(i);
                     int steps = powerAlgoritm.DoAlgAndStepCount(nArray);
                     totalSteps += steps;
                 }
