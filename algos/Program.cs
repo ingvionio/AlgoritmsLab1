@@ -6,6 +6,7 @@ namespace Algoritms.ConsloeApp
     {
         static void Main()
         {
+            MultiplyElements mul = new MultiplyElements();
             TimSort algoritm = new TimSort();
             BubbleSort bubbleSort = new BubbleSort();
             QuickSortAlgoritm quickSortAlgoritm = new QuickSortAlgoritm();
@@ -36,8 +37,8 @@ namespace Algoritms.ConsloeApp
             {
                 Console.WriteLine(el.ToString());
             }*/
-            var test = Generator.GeneratePowers(15);
-            standartQuickPower.DoAlgoritm(test);
+            var test = Generator.Generate(10);
+            mul.DoAlgoritm(test);
         }
     }
 }

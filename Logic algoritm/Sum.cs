@@ -10,11 +10,11 @@ namespace Algoritms.Logic
     {
         public override void DoAlgoritm(Array array)
         {
-            long sumValue = 0;
+            int sumValue = 0;
 
             for (int i = 0; i < array.Length; i++)
             {
-                sumValue += Convert.ToInt64(array.GetValue(i));
+                sumValue += Convert.ToInt32(array.GetValue(i));
             }
         }
     }

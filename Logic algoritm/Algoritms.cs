@@ -11,6 +11,11 @@ namespace Algoritms.Logic
     {
         public abstract void DoAlgoritm(Array array);
     }
+
+    public abstract class PowersAlg : Algoritm
+    {
+        public abstract int DoAlgAndStepCount(Array array);
+    }
 }
 
 

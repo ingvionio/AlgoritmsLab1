@@ -8,7 +8,7 @@ namespace Algoritms.Logic
 {
     public static class Generator
     {
-        public static int[] Generate(int n, int nMin = 100, int nMax = 1000)
+        public static int[] Generate(int n, int nMin = 1000000000, int nMax = 2000000000)
         {
             int[] array = new int[n];
             Random random = new Random();

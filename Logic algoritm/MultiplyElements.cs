@@ -10,11 +10,11 @@ namespace Algoritms.Logic
     {
         public override void DoAlgoritm(Array array)
         {
-            double multiplyValue = 1;
+            int multiplyValue = 1;
 
             for (int i = 0; i < array.Length; i++)
             {
-                multiplyValue = Convert.ToDouble(array.GetValue(i)) * multiplyValue;
+                multiplyValue *= Convert.ToInt32(array.GetValue(i));
             }
         }
     }

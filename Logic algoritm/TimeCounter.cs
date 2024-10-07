@@ -35,6 +35,32 @@ namespace Algoritms.Logic
             return averageTimes;
         }
 
+        public static List<long> StepCount(int nMin, int nMax, PowersAlg powerAlgoritm, int step, CancellationToken cancellationToken, int repetitions = 5)
+        {
+            List<long> averageTimes = new List<long>();
+
+            for (int i = nMin; i <= nMax; i += step)
+            {
+                // Проверяем отмену
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    throw new OperationCanceledException();
+                }
+
+                long totalSteps = 0;
+                for (int j = 0; j < repetitions; j++)
+                {
+                    int[] nArray = Generator.Generate(i);
+                    int steps = powerAlgoritm.DoAlgAndStepCount(nArray);
+                    totalSteps += steps;
+                }
+
+                averageTimes.Add(totalSteps / repetitions);
+            }
+
+            return averageTimes;
+        }
+
         public static List<TimeSpan> TimeCount(int nMin, int nMax, MatrixMultiplyer algoritm, int step, CancellationToken cancellationToken, int repetitions = 5)
         {
             List<TimeSpan> averageTimes = new List<TimeSpan>();
