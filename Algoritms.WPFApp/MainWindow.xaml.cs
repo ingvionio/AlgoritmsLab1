@@ -43,7 +43,6 @@ namespace Algoritms.WPFApp
                 return;
             }
 
-
             _cancellationTokenSource = new CancellationTokenSource();
             RunButton.IsEnabled = false;
             CancelButton.IsEnabled = true;
@@ -56,11 +55,11 @@ namespace Algoritms.WPFApp
 
                 model.Legends.Add(new Legend
                 {
-                    LegendPosition = LegendPosition.TopRight, // Позиция легенды
-                    LegendPlacement = LegendPlacement.Outside, // Внешняя легенда
+                    LegendPosition = LegendPosition.TopRight,
+                    LegendPlacement = LegendPlacement.Outside,
                     LegendOrientation = LegendOrientation.Horizontal,
                     LegendBorderThickness = 1,
-                    LegendTitle = "Алгоритмы", // Заголовок легенды
+                    LegendTitle = "Алгоритмы",
                     LegendTitleFontWeight = OxyPlot.FontWeights.Bold
                 });
 
@@ -76,7 +75,7 @@ namespace Algoritms.WPFApp
                 model.Axes.Add(new LinearAxis
                 {
                     Position = AxisPosition.Left,
-                    Title = "Время (мс)",
+                    Title = "Время (мс) / Шаги",
                     MajorGridlineStyle = LineStyle.Solid,
                     MinorGridlineStyle = LineStyle.Dot,
                     TicklineColor = OxyColors.Black,
@@ -92,31 +91,62 @@ namespace Algoritms.WPFApp
                     Algoritm algorithm = GetSelectedAlgorithm(algorithmName);
                     if (algorithm == null) continue;
 
-                    List<TimeSpan> algorithmTimes = await Task.Run(() =>
+                    List<TimeSpan> algorithmTimes;
+                    List<long> stepCounts;
+
+                    if (algorithm is PowersAlg powersAlgorithm)
                     {
-                        List<TimeSpan> result;
-                        if (algorithm is MatrixMultiplyer)
+                        stepCounts = await Task.Run(() =>
                         {
-                            result = TimeCounter.TimeCount(nMin, nMax, (MatrixMultiplyer)algorithm, step, _cancellationTokenSource.Token, repetitions);
-                        }
-
-                        else
-                        {
-                            result = TimeCounter.TimeCount(nMin, nMax, algorithm, step, _cancellationTokenSource.Token, repetitions);
-                        }
-
-
-                        currentStep += ((nMax - nMin) / step + 1) * repetitions;
-                        Dispatcher.Invoke(() =>
-                        {
-                            SortingProgressBar.Value = (double)currentStep / totalSteps * 100;
+                            var result = TimeCounter.StepCount(nMin, nMax, powersAlgorithm, step, _cancellationTokenSource.Token, repetitions);
+                            currentStep += ((nMax - nMin) / step + 1) * repetitions;
+                            Dispatcher.Invoke(() =>
+                            {
+                                SortingProgressBar.Value = (double)currentStep / totalSteps * 100;
+                            });
+                            return result;
                         });
-                        return result;
-                    });
+                        algorithmTimes = stepCounts.Select(c => TimeSpan.FromTicks(c)).ToList(); // Преобразование шагов в TimeSpan для удобства
+                    }
+                    else if (algorithm is MatrixMultiplyer matrixAlgorithm)
+                    {
+                        algorithmTimes = await Task.Run(() =>
+                        {
+                            var result = TimeCounter.TimeCount(nMin, nMax, matrixAlgorithm, step, _cancellationTokenSource.Token, repetitions);
+                            currentStep += ((nMax - nMin) / step + 1) * repetitions;
+                            Dispatcher.Invoke(() =>
+                            {
+                                SortingProgressBar.Value = (double)currentStep / totalSteps * 100;
+                            });
+                            return result;
+                        });
+                        stepCounts = null;
+                    }
+                    else
+                    {
+                        algorithmTimes = await Task.Run(() =>
+                        {
+                            var result = TimeCounter.TimeCount(nMin, nMax, algorithm, step, _cancellationTokenSource.Token, repetitions);
+                            currentStep += ((nMax - nMin) / step + 1) * repetitions;
+                            Dispatcher.Invoke(() =>
+                            {
+                                SortingProgressBar.Value = (double)currentStep / totalSteps * 100;
+                            });
+                            return result;
+                        });
+                        stepCounts = null;
+                    }
 
                     Dispatcher.Invoke(() =>
                     {
-                        AddSeriesToPlot(model, algorithmTimes, nMin, step, algorithmName);
+                        if (algorithm is PowersAlg)
+                        {
+                            AddStepSeriesToPlot(model, stepCounts, nMin, step, algorithmName);
+                        }
+                        else
+                        {
+                            AddSeriesToPlot(model, algorithmTimes, nMin, step, algorithmName);
+                        }
                     });
                 }
 
@@ -140,36 +170,117 @@ namespace Algoritms.WPFApp
             }
         }
 
-        // Измененный метод для замера времени умножения матриц
-        private List<TimeSpan> TimeMatrixMultiplication(int matrixSize, int nMin, int nMax, int step, int repetitions, CancellationToken cancellationToken)
+        private void AddStepSeriesToPlot(PlotModel model, List<long> stepCounts, int nMin, int step, string algorithmName)
         {
-            List<TimeSpan> averageTimes = new List<TimeSpan>();
-            MatrixMultiplyer matrixMultiplier = new MatrixMultiplyer();
-
-            // Используем nMin, nMax, step для размера матрицы
-            for (int i = nMin; i <= nMax; i += step)
+            StairStepSeries series = new StairStepSeries
             {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    throw new OperationCanceledException();
-                }
+                Title = algorithmName,
+                MarkerType = MarkerType.Circle,
+                MarkerSize = 4,
+                StrokeThickness = 2
+            };
 
-                long totalTicks = 0;
-                for (int j = 0; j < repetitions; j++)
-                {
-                    int[,] firstMatrix = Generator.GenerateMatrix(i, nMin, nMax); // Используем i для размера матрицы
-                    int[,] secondMatrix = Generator.GenerateMatrix(i, nMin, nMax);
-
-                    Stopwatch sw = Stopwatch.StartNew();
-                    matrixMultiplier.DoAlgoritm(firstMatrix, secondMatrix);
-                    sw.Stop();
-                    totalTicks += sw.ElapsedTicks;
-                }
-                averageTimes.Add(new TimeSpan(totalTicks / repetitions));
+            switch (algorithmName)
+            {
+                case "Bubble Sort":
+                    series.Color = OxyColors.Green;
+                    series.MarkerFill = OxyColors.DarkGreen;
+                    break;
+                case "Quick Sort":
+                    series.Color = OxyColors.Red;
+                    series.MarkerFill = OxyColors.DarkRed;
+                    break;
+                case "Tim Sort":
+                    series.Color = OxyColors.Blue;
+                    series.MarkerFill = OxyColors.DarkBlue;
+                    break;
+                case "Heap Sort":
+                    series.Color = OxyColors.Yellow;
+                    series.MarkerFill = OxyColors.DarkGoldenrod;
+                    break;
+                case "Gnome Sort":
+                    series.Color = OxyColors.Purple;
+                    series.MarkerFill = OxyColors.DarkViolet;
+                    break;
+                case "BingoSort":
+                    series.Color = OxyColors.Orange;
+                    series.MarkerFill = OxyColors.DarkOrange;
+                    break;
+                case "Horner Method":
+                    series.Color = OxyColors.Brown;
+                    series.MarkerFill = OxyColors.SaddleBrown;
+                    break;
+                case "Multiply Elements":
+                    series.Color = OxyColors.Cyan;
+                    series.MarkerFill = OxyColors.DarkCyan;
+                    break;
+                case "Naive Assessment":
+                    series.Color = OxyColors.Magenta;
+                    series.MarkerFill = OxyColors.DarkMagenta;
+                    break;
+                case "PowAlgorithm":
+                    series.Color = OxyColors.Lime;
+                    series.MarkerFill = OxyColors.DarkOliveGreen;
+                    break;
+                case "QuickPow":
+                    series.Color = OxyColors.Pink;
+                    series.MarkerFill = OxyColors.DeepPink;
+                    break;
+                case "RecPow":
+                    series.Color = OxyColors.Teal;
+                    series.MarkerFill = OxyColors.DarkSlateGray;
+                    break;
+                case "Sum":
+                    series.Color = OxyColors.Gold;
+                    series.MarkerFill = OxyColors.Goldenrod;
+                    break;
+                case "MtrixMultiply":
+                    series.Color = OxyColors.Gold;
+                    series.MarkerFill = OxyColors.Goldenrod;
+                    break;
+                case "Const":
+                    series.Color = OxyColors.Gray;
+                    series.MarkerFill = OxyColors.DarkGray;
+                    break;
+                case "Matrix Multiplyer":
+                    series.Color = OxyColors.BlueViolet;
+                    series.MarkerFill = OxyColors.DarkBlue;
+                    break;
+                case "StandartQuickPower":
+                    series.Color = OxyColors.SkyBlue;
+                    series.MarkerFill = OxyColors.DarkSlateBlue;
+                    break;
+                default:
+                    series.Color = OxyColors.Black;
+                    series.MarkerFill = OxyColors.Gray;
+                    break;
             }
-            return averageTimes;
-        }
 
+            for (int i = 0; i < stepCounts.Count; i++)
+            {
+                series.Points.Add(new DataPoint(nMin + i * step, stepCounts[i]));
+            }
+
+            // Данные для апроксимации
+            double[] xData = stepCounts.Select((t, i) => (double)(nMin + i * step)).ToArray();
+            double[] yData = stepCounts.Select(t => (double)t).ToArray();
+
+            // Вычисляем коэффициенты полинома 3-й степени
+            double[] polynomialCoefficients = GetPolynomialApproximation(xData, yData, 3);
+
+            // Создаем FunctionSeries для апроксимации
+            FunctionSeries approximationSeries = new FunctionSeries(
+                x => polynomialCoefficients[0] + polynomialCoefficients[1] * x +
+                     polynomialCoefficients[2] * x * x + polynomialCoefficients[3] * x * x * x,
+                xData.Min(), xData.Max(), 0.1,
+                $"{algorithmName} (Апроксимация)"
+            );
+            approximationSeries.Color = OxyColors.OrangeRed;
+
+            // Добавляем графики на PlotModel
+            model.Series.Add(series);
+            model.Series.Add(approximationSeries);
+        }
         private void AddSeriesToPlot(PlotModel model, List<TimeSpan> times, int nMin, int step, string algorithmName)
         {
             LineSeries series = new LineSeries
