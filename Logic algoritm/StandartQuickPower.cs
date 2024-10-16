@@ -19,10 +19,10 @@ namespace Algoritms.Logic
         {
             int totalSteps = 0;
 
-            for (int i = 0; i < powers.Length; i++)
-            {
-                totalSteps += QuickPower(num, Convert.ToInt32(powers.GetValue(i)));
-            }
+            //for (int i = 0; i < powers.Length; i++)
+            //{
+                totalSteps += QuickPower(num, Convert.ToInt32(powers.GetValue(powers.Length - 1)));
+            //}
             return totalSteps;
         }
 
@@ -31,22 +31,24 @@ namespace Algoritms.Logic
             long result = 1;
             int steps = 0;
 
-            while(power != 0)
+            while (power != 0)
             {
-                if(power % 2 == 0)
+                if (power % 2 == 0)
                 {
-                    num *= num;
-                    power /= 2;
-                    steps += 2;
+                    num *= num;      // возведение в квадрат
+                    power /= 2;      // деление степени пополам
+                    steps += 2;      // увеличение шагов за 2 операции (умножение и деление)
                 }
                 else
                 {
-                    result *= num;
-                    power--;
-                    steps += 2;
+                    result *= num;   // умножение на num при нечётной степени
+                    power--;         // уменьшение степени
+                    steps += 2;      // увеличение шагов за 2 операции (умножение и уменьшение)
                 }
             }
             return steps;
         }
+
+
     }
 }

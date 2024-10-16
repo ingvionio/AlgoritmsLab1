@@ -18,10 +18,10 @@ namespace Algoritms.Logic
         public override int DoAlgAndStepCount(Array powers)
         {
             int totalSteps = 0;
-            for(int i = 0; i < powers.Length; i++)
-            {
-                totalSteps += QuickPower(num, Convert.ToInt32(powers.GetValue(i)));
-            }
+            //for(int i = 0; i < powers.Length; i++)
+            //{
+                totalSteps += QuickPower(num, Convert.ToInt32(powers.GetValue(powers.Length-1)));
+            //}
             return totalSteps;
         }
         public static int QuickPower(int num, int power)
@@ -43,12 +43,12 @@ namespace Algoritms.Logic
             {
                 power /= 2;
                 num *= num;
-                steps += 2;
+                steps += 1;
 
                 if(power % 2 == 1)
                 {
                     result *= num;
-                    steps++;
+                    //steps++;
                 }
             }
             return steps;

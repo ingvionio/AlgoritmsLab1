@@ -19,11 +19,11 @@ namespace Algoritms.Logic
         {
             int totalSteps = 0;
 
-            for (int i = 1; i < powers.Length; i++)
-            {
-                (long result, int steps) a = RecPower(num, Convert.ToInt32(powers.GetValue(i)));
+            //for (int i = 1; i < powers.Length; i++)
+            //{
+                (long result, int steps) a = RecPower(num, Convert.ToInt32(powers.GetValue(powers.Length-1)));
                 totalSteps += a.steps;
-            }
+            //}
             return totalSteps;
         }
         public static (long result, int steps) RecPower(int num, int power, int steps = 0)
